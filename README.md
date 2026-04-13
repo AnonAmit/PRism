@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/prism_logo.svg" alt="PRism Logo" width="200"/>
+  <img src="assets/prism_logo.svg" alt="PRism Logo" width="800"/>
   <h1>PRism Autonomous Engine 🚀</h1>
   <p><strong>A full-stack, production-grade autonomous PR generation system.</strong></p>
   
