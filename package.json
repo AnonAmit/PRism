@@ -1,0 +1,14 @@
+{
+  "name": "prism",
+  "version": "1.0.0",
+  "description": "PRism — Autonomous Code Contribution Engine",
+  "scripts": {
+    "backend": "cd backend && node --watch server.js",
+    "backend:start": "cd backend && node server.js",
+    "frontend": "cd frontend && npx serve . -p 5173 --cors",
+    "dev": "start /B cmd /C \"cd backend && node --watch server.js\" && cd frontend && npx serve . -p 5173"
+  },
+  "workspaces": [
+    "backend"
+  ]
+}

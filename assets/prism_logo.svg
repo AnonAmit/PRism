@@ -1,0 +1,69 @@
+<svg width="100%" viewBox="0 0 680 380" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">PRism logo</title>
+  <desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">A triangular prism refracting a white beam into a spectrum of colored rays, with the wordmark PRism below.</desc>
+  <defs>
+    <linearGradient id="beam-in" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.0"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="ray1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7F77DD" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#7F77DD" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="ray2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#378ADD" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#378ADD" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="ray3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1D9E75" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#1D9E75" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="ray4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#EF9F27" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#EF9F27" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="ray5" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E24B4A" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#E24B4A" stop-opacity="0.0"/>
+    </linearGradient>
+    <linearGradient id="prism-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2C2C2A" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#444441" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Incoming white beam (left side) -->
+  <polygon points="130,188 240,178 240,200" fill="url(#beam-in)" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Prism triangle -->
+  <polygon points="240,110 240,270 370,190" fill="url(#prism-fill)" stroke="#888780" stroke-width="1.5" style="stroke:rgb(136, 135, 128);color:rgb(251, 251, 254);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Prism edge highlights -->
+  <line x1="240" y1="110" x2="240" y2="270" stroke="#ffffff" stroke-width="0.8" opacity="0.15" style="fill:rgb(0, 0, 0);stroke:rgb(255, 255, 255);color:rgb(251, 251, 254);stroke-width:0.8px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.15;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <line x1="240" y1="110" x2="370" y2="190" stroke="#ffffff" stroke-width="0.4" opacity="0.1" style="fill:rgb(0, 0, 0);stroke:rgb(255, 255, 255);color:rgb(251, 251, 254);stroke-width:0.4px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <line x1="240" y1="270" x2="370" y2="190" stroke="#ffffff" stroke-width="0.4" opacity="0.1" style="fill:rgb(0, 0, 0);stroke:rgb(255, 255, 255);color:rgb(251, 251, 254);stroke-width:0.4px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Refracted rays (fanning out to the right from prism apex) -->
+  <!-- Ray 1 — violet (top) -->
+  <polygon points="370,190 540,110 555,118" fill="url(#ray1)" opacity="0.9" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.9;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Ray 2 — blue -->
+  <polygon points="370,190 540,145 553,150" fill="url(#ray2)" opacity="0.9" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.9;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Ray 3 — teal/green -->
+  <polygon points="370,190 540,185 540,195" fill="url(#ray3)" opacity="0.9" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.9;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Ray 4 — amber -->
+  <polygon points="370,190 540,228 552,236" fill="url(#ray4)" opacity="0.9" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.9;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Ray 5 — red -->
+  <polygon points="370,190 540,265 553,272" fill="url(#ray5)" opacity="0.9" style="stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.9;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Dot at entry point -->
+  <circle cx="240" cy="189" r="3" fill="#ffffff" opacity="0.5" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.5;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  <!-- Dot at exit point (apex) -->
+  <circle cx="370" cy="190" r="3.5" fill="#ffffff" opacity="0.6" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:0.6;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- Wordmark -->
+  <text x="340" y="330" text-anchor="middle" font-family="var(--font-sans, sans-serif)" font-size="42" font-weight="500" letter-spacing="-1" fill="#2C2C2A" style="fill:rgb(44, 44, 42);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Anthropic Sans, sans-serif;font-size:42px;font-weight:500;text-anchor:middle;dominant-baseline:auto">PR<tspan fill="#7F77DD" style="fill:rgb(127, 119, 221);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Anthropic Sans, sans-serif;font-size:42px;font-weight:500;text-anchor:middle;dominant-baseline:auto">ism</tspan></text>
+
+  <!-- Tagline -->
+  <text x="340" y="358" text-anchor="middle" font-family="var(--font-sans, sans-serif)" font-size="12" font-weight="400" letter-spacing="3" fill="#888780" style="fill:rgb(136, 135, 128);stroke:none;color:rgb(251, 251, 254);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Anthropic Sans, sans-serif;font-size:12px;font-weight:400;text-anchor:middle;dominant-baseline:auto">AUTONOMOUS CODE CONTRIBUTION</text>
+
+</svg>
