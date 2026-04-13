@@ -12,12 +12,14 @@ import { GeminiProvider } from './gemini.js';
 import { OpenAIProvider } from './openai.js';
 import { ClaudeProvider } from './claude.js';
 import { OpenRouterProvider } from './openrouter.js';
+import { LocalProvider } from './local.js';
 
 const PROVIDERS = {
   gemini: GeminiProvider,
   openai: OpenAIProvider,
   claude: ClaudeProvider,
   openrouter: OpenRouterProvider,
+  local: LocalProvider,
 };
 
 export function createAIProvider(providerName, apiKey, model) {

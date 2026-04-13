@@ -23,6 +23,7 @@ const state = {
   fixes: [],
   pr: null,
   currentStage: 0,
+  repoUrl: null,
 };
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
@@ -264,6 +265,7 @@ function showPipelineView(repoUrl) {
   state.fixes = [];
   state.pr = null;
   state.currentStage = 0;
+  state.repoUrl = repoUrl;
 
   // Reset UI
   terminalOutput.innerHTML = '';
@@ -363,7 +365,7 @@ function connectWebSocket(sessionId) {
       const existingEmpty = issuesList.querySelector('.empty-state');
       if (existingEmpty) existingEmpty.remove();
 
-      const card = createIssueCard(issue);
+      const card = createIssueCard(issue, state.repoUrl);
       issuesList.appendChild(card);
 
       // Switch to issues tab if first issue
@@ -476,7 +478,7 @@ function renderFinalIssueList(issues) {
   state.issues = issues;
   statIssues.textContent = issues.length;
   for (const issue of issues) {
-    const card = createIssueCard(issue);
+    const card = createIssueCard(issue, state.repoUrl);
     issuesList.appendChild(card);
   }
 }

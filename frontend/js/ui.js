@@ -150,7 +150,7 @@ const ISSUE_COLORS = {
   MISSING_FEATURE: '#C44BDE',
 };
 
-export function createIssueCard(issue) {
+export function createIssueCard(issue, repoUrl = '') {
   const card = document.createElement('div');
   card.className = 'issue-card';
   card.dataset.type = issue.type;
@@ -160,13 +160,28 @@ export function createIssueCard(issue) {
   const tier = issue.tier || 'P3';
   const confidencePct = Math.round((issue.confidence || 0) * 100);
 
+  // Generate GitHub link if repoUrl is present
+  let fileMarkup = escapeHtml(issue.file);
+  const lineStart = issue.line_range ? issue.line_range[0] : null;
+  const lineEnd   = issue.line_range ? issue.line_range[1] : null;
+  const lineHash  = lineStart ? (lineEnd && lineEnd !== lineStart ? `#L${lineStart}-L${lineEnd}` : `#L${lineStart}`) : '';
+  
+  if (repoUrl) {
+    const cleanRepoUrl = repoUrl.replace(/\/$/, '');
+    // Simple heuristic: default to branch main
+    const fileUrl = `${cleanRepoUrl}/blob/main/${issue.file}${lineHash}`;
+    fileMarkup = `<a href="${fileUrl}" target="_blank" rel="noopener noreferrer" style="color:inherit; text-decoration:underline;" title="Open in GitHub">${escapeHtml(issue.file)}${lineStart ? `:${lineStart}` : ''}</a>`;
+  } else {
+    fileMarkup = `${escapeHtml(issue.file)}${lineStart ? `:${lineStart}` : ''}`;
+  }
+
   card.innerHTML = `
     <div class="issue-header">
       <span class="issue-tier ${tier}">${tier}</span>
       <span class="issue-type-badge" style="color:${color}">${issue.type}</span>
     </div>
     <div class="issue-title">${escapeHtml(issue.title)}</div>
-    <div class="issue-file">${escapeHtml(issue.file)}${issue.line_range ? `:${issue.line_range[0]}` : ''}</div>
+    <div class="issue-file">${fileMarkup}</div>
     <div class="issue-confidence">Confidence: ${confidencePct}% · ${issue.detection_strategy || 'UNKNOWN'}</div>
   `;
 
