@@ -5,6 +5,7 @@ import { mkdir } from 'fs/promises';
 import { runStage1 } from '../agents/stage1_ingest.js';
 import { runStage2 } from '../agents/stage2_understand.js';
 import { runStage3 } from '../agents/stage3_detect.js';
+import { runSanityCheck } from '../agents/sanity_agent.js';
 import { runStage4 } from '../agents/stage4_prioritize.js';
 import { runStage5 } from '../agents/stage5_fix.js';
 import { runStage6 } from '../agents/stage6_validate.js';
@@ -74,13 +75,19 @@ export async function runPipeline(ctx) {
   if (ctx.stage2) ctx.confidence.stage2 = ctx.stage2.confidence ?? 0.7;
 
   // ═══════════════════════════════════════════════
-  // STAGE 3 — ISSUE DETECTION
+  // STAGE 3 — ISSUE DETECTION + SANITY CHECK
   // ═══════════════════════════════════════════════
   ctx.currentStage = 3;
   ctx.stage3 = await runAgentLoop({
     stage: 3,
     name: 'Issue Detection',
-    execute: (c, attempt) => runStage3(c, attempt),
+    execute: async (c, attempt) => {
+      const detectResult = await runStage3(c, attempt);
+      // Run sanity check right away on the merged issues
+      detectResult.issues = await runSanityCheck(c, detectResult.issues);
+      detectResult.summary = `${detectResult.issues.length} valid issues survived sanity check`;
+      return detectResult;
+    },
     validate: (r) => {
       if (!r) return { valid: false, reason: 'No detection output.' };
       if (!Array.isArray(r.issues)) return { valid: false, reason: 'issues must be an array.' };
@@ -156,12 +163,26 @@ export async function runPipeline(ctx) {
   // ═══════════════════════════════════════════════
   // FINAL CONFIDENCE SCORE
   // ═══════════════════════════════════════════════
-  ctx.confidence.final = Math.round((
-    ctx.confidence.stage2 * 0.15 +
-    ctx.confidence.stage3 * 0.20 +
-    ctx.confidence.stage5 * 0.30 +
-    ctx.confidence.stage6 * 0.35
-  ) * 100);
+  let finalConfidence = Math.min(
+    ctx.confidence.stage2 || 1.0,
+    ctx.confidence.stage3 || 1.0,
+    ctx.confidence.stage5 || 1.0,
+    ctx.confidence.stage6 || 1.0
+  );
+
+  // If no tests/linter were successfully executed, max confidence is 60%
+  const noValidation = (!ctx.stage6?.testResult?.available && !ctx.stage6?.linterResult?.available);
+  if (noValidation && finalConfidence > 0.60) {
+    ctx.info(0, 'Validation execution unavailable (no tests/linter). Capping confidence at 60%.');
+    finalConfidence = 0.60;
+  }
+
+  // If sanity agent or any stage dropped confidence extremely low, respect the cap
+  if (ctx.stage3?.issues && ctx.stage3.issues.some(i => i.confidence < 0.5)) {
+    finalConfidence = Math.min(finalConfidence, 0.50);
+  }
+
+  ctx.confidence.final = Math.round(finalConfidence * 100);
 
   ctx.status = 'complete';
   ctx.info(0, `Pipeline complete. Final confidence: ${ctx.confidence.final}%`);

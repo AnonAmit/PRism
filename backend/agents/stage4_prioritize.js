@@ -17,49 +17,79 @@ export async function runStage4(ctx, attempt) {
     };
   }
 
-  ctx.info(4, `[EXECUTE] Scoring ${issues.length} issues...`);
+  // 1: Filter out low confidence and deduplicate
+  const uniqueIssuesMap = new Map();
+  for (const issue of issues) {
+    if ((issue.confidence ?? 0.7) < 0.5) {
+      ctx.info(4, `Filtered out low-confidence issue: ${issue.id} (${issue.confidence})`);
+      continue;
+    }
+    
+    // Deduplication key: type + file + first 25 chars of title
+    const dedupKey = `${issue.type}:${issue.file}:${issue.title.substring(0, 25).toLowerCase()}`;
+    if (!uniqueIssuesMap.has(dedupKey)) {
+      uniqueIssuesMap.set(dedupKey, issue);
+    } else {
+      // Keep the one with higher confidence
+      if ((issue.confidence ?? 0) > (uniqueIssuesMap.get(dedupKey).confidence ?? 0)) {
+        uniqueIssuesMap.set(dedupKey, issue);
+      } else {
+        ctx.info(4, `Filtered out duplicate issue: ${issue.id}`);
+      }
+    }
+  }
 
-  // Score each issue using the formula from the system prompt
-  const scored = issues.map(issue => {
+  const filteredIssues = Array.from(uniqueIssuesMap.values());
+  ctx.info(4, `[EXECUTE] Scoring ${filteredIssues.length} unique, high-confidence issues...`);
+
+  // 2: Score each issue
+  const scored = filteredIssues.map(issue => {
     const severity = getSeverityWeight(issue);
     const feasibility = getFixFeasibility(issue);
     const contribution = getContributionValue(issue);
     const riskInverse = getRiskInverse(issue);
+    const confidenceWeight = (issue.confidence ?? 0.7) * 5; // 0 to 5 max
 
     const priorityScore =
-      (severity * 0.35) +
-      (feasibility * 0.25) +
-      (contribution * 0.20) +
-      (riskInverse * 0.20);
+      (severity * 0.30) +
+      (confidenceWeight * 0.20) +
+      (feasibility * 0.20) +
+      (contribution * 0.15) +
+      (riskInverse * 0.15);
 
-    const tier = priorityScore >= 8.0 ? 'P0'
-               : priorityScore >= 6.0 ? 'P1'
-               : priorityScore >= 4.0 ? 'P2'
+    const tier = priorityScore >= 7.5 ? 'P0'
+               : priorityScore >= 5.5 ? 'P1'
+               : priorityScore >= 3.5 ? 'P2'
                : 'P3';
 
     return {
       ...issue,
       priorityScore: Math.round(priorityScore * 100) / 100,
       tier,
-      scoring: { severity, feasibility, contribution, riskInverse },
+      scoring: { severity, feasibility, contribution, riskInverse, confidenceWeight },
     };
   });
 
   // Sort by priority score descending
   scored.sort((a, b) => b.priorityScore - a.priorityScore);
 
-  // Apply PR candidate rule: max 1 P0 OR up to 3 P1/P2
-  let prCandidates = [];
-  const p0s = scored.filter(i => i.tier === 'P0');
-  const p1p2s = scored.filter(i => i.tier === 'P1' || i.tier === 'P2');
-  const p3s = scored.filter(i => i.tier === 'P3');
+  // Apply PR candidate rule: Take top 5-10
+  let prCandidates = scored.slice(0, 10); // keep up to top 10
+  
+  const p0s = prCandidates.filter(i => i.tier === 'P0');
+  const p1p2s = prCandidates.filter(i => i.tier === 'P1' || i.tier === 'P2');
+  const p3s = prCandidates.filter(i => i.tier === 'P3');
 
   if (p0s.length > 0) {
-    prCandidates = [p0s[0]]; // Only 1 P0 per PR
-    ctx.info(4, `PR candidate: 1 P0 issue (${p0s[0].title})`);
-  } else {
-    prCandidates = p1p2s.slice(0, 3);
+    // If we have P0s, prioritize them but allow some high P1s if room
+    prCandidates = [...p0s, ...p1p2s].slice(0, 5); // At least 5 high-priority issues
+    ctx.info(4, `PR candidates: ${p0s.length} P0 issue(s) and ${prCandidates.length - p0s.length} P1/P2(s)`);
+  } else if (p1p2s.length > 0) {
+    prCandidates = p1p2s.slice(0, 8); // Up to 8 P1/P2s
     ctx.info(4, `PR candidates: ${prCandidates.length} P1/P2 issues`);
+  } else {
+    prCandidates = p3s.slice(0, 5);
+    ctx.info(4, `PR candidates: ${prCandidates.length} P3 issues`);
   }
 
   // Log P3 issues (document only)

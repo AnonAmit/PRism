@@ -127,25 +127,30 @@ Linter: ${linterResult?.available ? `${linterResult.tool} — exit code ${linter
 ${linterHit ? `Linter found issue in this file: ${JSON.stringify(linterHit)}` : ''}
 Tests: ${testResult?.available ? `${testResult.tool} — ${testResult.passed} passed, ${testResult.failed} failed` : 'Not available'}
 
-TASK: Validate this fix. Return ONLY valid JSON:
+TASK: Validate this fix AND the original issue it claims to solve.
+Critically evaluate:
+1. Does the original issue actually exist, or is it an AI hallucination?
+2. Does this fix address a real, tangible problem?
+
+Return ONLY valid JSON:
 
 {
+  "issue_real": "YES|NO|UNCERTAIN",
   "logic_check": "PASS|FAIL|UNCERTAIN",
   "breaking_change": "YES|NO|POSSIBLE",
   "simulation_result": "PASS|FAIL",
   "style_valid": "YES|NO",
   "test_impact": "NONE|COVERED|UNCOVERED",
   "final_status": "APPROVED|REJECTED|CONDITIONAL",
-  "rejection_reason": "only if REJECTED",
-  "caveats": "any specific things reviewer must check"
+  "rejection_reason": "Provide reason if REJECTED, especially if 'issue_real' is NO.",
+  "caveats": "Any manual review requirements."
 }
 
 Rules:
-- If tests failed AND this fix touches test-covered code → CONDITIONAL with caveat.
-- If linter reports an error in this file → note in caveats.
-- If diff changes any public API signature → breaking_change = POSSIBLE.
-- REJECT only if the diff clearly introduces a new bug or is syntactically invalid.
-- CONDITIONAL = approved with caveats for reviewer.`;
+- If you determine the original issue is a hallucination or impossible logic flaw, set 'issue_real': 'NO' and 'final_status': 'REJECTED'.
+- If tests failed AND this fix touches test-covered code -> CONDITIONAL with caveat.
+- If diff changes public API -> breaking_change = POSSIBLE.
+- REJECT heavily if the issue is a false positive or the diff breaks syntax.`;
 
   try {
     const rawResponse = await ctx.ai.complete(prompt, { temperature: 0.05, maxTokens: 1024 });
